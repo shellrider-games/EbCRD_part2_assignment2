@@ -37,7 +37,6 @@ public class MyNavGrid : MonoBehaviour
     private void Awake()
     {
         CalculateWalkable();
-        
     }
 
     private void CalculateWalkable()
@@ -62,8 +61,42 @@ public class MyNavGrid : MonoBehaviour
         }
     }
 
+    public int Distance(Vector2 start, Vector2 goal)
+    {
+        int distance = 0;
+        Vector2Int target = new Vector2Int((int)goal.x, (int)goal.y);
+        Vector2Int current = new Vector2Int((int) start.x, (int) start.y);
+
+        while (current != target)
+        {
+            distance += DistanceForNextField(current, target);
+
+            current = MoveOneFieldCloser(current, target);
+        }
+        return distance;
+    }
+
+    private int DistanceForNextField(Vector2Int current, Vector2Int target)
+    {
+        if (current.x != target.x && current.y != target.y) return 14;
+        return 10;
+    }
+
+    private Vector2Int MoveOneFieldCloser(Vector2Int current, Vector2Int target)
+    {
+        Vector2Int nextField = current;
+        if (nextField.x < target.x) nextField.x += 1;
+        else if (nextField.x > target.x) nextField.x -= 1;
+
+        if (nextField.y < target.y) nextField.y += 1;
+        else if (nextField.y > target.y) nextField.y -= 1;
+
+        return nextField;
+    }
+    
     void Start()
     {
+        
     }
 
     // Update is called once per frame

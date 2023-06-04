@@ -94,6 +94,53 @@ public class MyNavGrid : MonoBehaviour
         return nextField;
     }
     
+    private List<Vector2Int> GetReachableNeighboursOf(Vector2Int position, List<Vector2Int> closed)
+    {
+        List<Vector2Int> reachableNeighbours = new List<Vector2Int>();
+        
+        //Adjacent
+        if (position.x > 0 && !_blocked[position.y, position.x - 1])
+        {
+            reachableNeighbours.Add(new Vector2Int(position.x - 1,position.y));
+        }
+        if (position.x < _blocked.GetLength(1) && !_blocked[position.y, position.x + 1])
+        {
+            reachableNeighbours.Add(new Vector2Int(position.x + 1, position.y));
+        }
+        if (position.y > 0 && !_blocked[position.y - 1, position.x])
+        {
+            reachableNeighbours.Add(new Vector2Int(position.x,position.y - 1));
+        }
+        if (position.y < _blocked.GetLength(0) && !_blocked[position.y + 1, position.x])
+        {
+            reachableNeighbours.Add(new Vector2Int(position.x, position.y+1));
+        }
+
+        //Diagonal with edge free rule
+        if (reachableNeighbours.Contains(new Vector2Int(position.x - 1, position.y)) &&
+            reachableNeighbours.Contains(new Vector2Int(position.x, position.y - 1)))
+        {
+            if(!_blocked[position.y-1, position.x-1]) reachableNeighbours.Add(new Vector2Int(position.x-1, position.y-1));
+        }
+        if (reachableNeighbours.Contains(new Vector2Int(position.x + 1, position.y)) &&
+            reachableNeighbours.Contains(new Vector2Int(position.x, position.y - 1)))
+        {
+            if(!_blocked[position.y-1, position.x-1]) reachableNeighbours.Add(new Vector2Int(position.x+1, position.y-1));
+        }
+        if (reachableNeighbours.Contains(new Vector2Int(position.x - 1, position.y)) &&
+            reachableNeighbours.Contains(new Vector2Int(position.x, position.y + 1)))
+        {
+            if(!_blocked[position.y-1, position.x-1]) reachableNeighbours.Add(new Vector2Int(position.x-1, position.y+1));
+        }
+        if (reachableNeighbours.Contains(new Vector2Int(position.x + 1, position.y)) &&
+            reachableNeighbours.Contains(new Vector2Int(position.x, position.y + 1)))
+        {
+            if(!_blocked[position.y-1, position.x-1]) reachableNeighbours.Add(new Vector2Int(position.x+1, position.y+1));
+        }
+
+        return reachableNeighbours;
+    }
+
     void Start()
     {
         

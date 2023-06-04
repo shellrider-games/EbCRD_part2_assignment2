@@ -99,6 +99,7 @@ public class MyNavGrid : MonoBehaviour
                         if (current.GCost + 14 < alreadyExists.GCost)
                         {
                             alreadyExists.GCost = current.GCost + 14;
+                            alreadyExists.Parent = current;
                         }
                     }
                     else
@@ -106,6 +107,7 @@ public class MyNavGrid : MonoBehaviour
                         if (current.GCost + 10 < alreadyExists.GCost)
                         {
                             alreadyExists.GCost = current.GCost + 10;
+                            alreadyExists.Parent = current;
                         }
                     }
                 }

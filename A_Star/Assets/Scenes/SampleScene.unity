@@ -759,7 +759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 443653087}
   from: {x: 0, y: 0}
-  to: {x: 8, y: 5}
+  to: {x: 13, y: 10}
 --- !u!4 &1824959100
 Transform:
   m_ObjectHideFlags: 0

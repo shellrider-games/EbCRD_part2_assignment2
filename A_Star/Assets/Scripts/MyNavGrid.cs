@@ -78,6 +78,18 @@ public class MyNavGrid : MonoBehaviour
         }
     }
 
+    public Vector2Int WorldPositionToGridPosition(Vector3 worldPosition)
+    {
+        return new Vector2Int((int)((worldPosition.x - transform.position.x) * transform.localScale.x / dimensions.x),
+            (int)((worldPosition.z - transform.position.y) * transform.localScale.z / dimensions.y));
+    }
+
+    public Vector3 GridPositionToWorldPosition(Vector2Int gridPosition)
+    {
+        return new Vector3(gridPosition.x * transform.localScale.x / dimensions.x, transform.position.y,
+            gridPosition.y * transform.localScale.z / dimensions.y);
+    }
+
     public AStarNode FindPath(Vector2Int from, Vector2Int target)
     {
         List<AStarNode> closed = new List<AStarNode>();
@@ -88,7 +100,7 @@ public class MyNavGrid : MonoBehaviour
         while (open.Count > 0)
         {
             AStarNode current = LowestFCost(open, target);
-        
+
             if (current.Position == target)
             {
                 return current;
@@ -104,7 +116,8 @@ public class MyNavGrid : MonoBehaviour
                 if (alreadyExistsInClosed != null) continue;
 
                 AStarNode alreadyExistsInOpen = open.Find(node => node.Position == position);
-                int newGCost = current.GCost + (current.Position.x != position.x && current.Position.y != position.y ? 14 : 10);
+                int newGCost = current.GCost +
+                               (current.Position.x != position.x && current.Position.y != position.y ? 14 : 10);
 
                 if (alreadyExistsInOpen != null)
                 {
@@ -120,12 +133,12 @@ public class MyNavGrid : MonoBehaviour
                 }
             }
         }
-        
-        return LowestHCost(closed,target);
+
+        return LowestHCost(closed, target);
     }
 
-    
-    public int Distance(Vector2 start, Vector2 goal)
+
+    private int Distance(Vector2 start, Vector2 goal)
     {
         int distance = 0;
         Vector2Int target = new Vector2Int((int)goal.x, (int)goal.y);
@@ -158,7 +171,7 @@ public class MyNavGrid : MonoBehaviour
 
         return nextField;
     }
-    
+
     private AStarNode LowestFCost(List<AStarNode> list, Vector2Int target)
     {
         if (list.Count == 0) return null;
@@ -179,7 +192,7 @@ public class MyNavGrid : MonoBehaviour
     {
         if (list.Count == 0) return null;
         AStarNode lowestHCost = list[0];
-        
+
         for (int i = 1; i < list.Count; i++)
         {
             if (Distance(list[i].Position, target) <

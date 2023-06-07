@@ -82,60 +82,48 @@ public class MyNavGrid : MonoBehaviour
     {
         List<AStarNode> closed = new List<AStarNode>();
         List<AStarNode> open = new List<AStarNode>();
-        AStarNode current = new AStarNode(from, 0, null);
-        closed.Add(current);
-        do
+        AStarNode start = new AStarNode(from, 0, null);
+        open.Add(start);
+
+        while (open.Count > 0)
         {
+            AStarNode current = LowestFCost(open, target);
+        
+            if (current.Position == target)
+            {
+                return current;
+            }
+
+            open.Remove(current);
+            closed.Add(current);
+
             List<Vector2Int> neighbours = GetReachableNeighboursOf(current.Position);
             foreach (Vector2Int position in neighbours)
             {
-                if (closed.Find(node => node.Position == position) is not null) continue;
-                AStarNode alreadyExists = open.Find(node => node.Position == position);
+                AStarNode alreadyExistsInClosed = closed.Find(node => node.Position == position);
+                if (alreadyExistsInClosed != null) continue;
 
-                if (alreadyExists is not null)
+                AStarNode alreadyExistsInOpen = open.Find(node => node.Position == position);
+                int newGCost = current.GCost + (current.Position.x != position.x && current.Position.y != position.y ? 14 : 10);
+
+                if (alreadyExistsInOpen != null)
                 {
-                    if (alreadyExists.Position.x != position.x && alreadyExists.Position.y != position.y)
+                    if (newGCost < alreadyExistsInOpen.GCost)
                     {
-                        if (current.GCost + 14 < alreadyExists.GCost)
-                        {
-                            alreadyExists.GCost = current.GCost + 14;
-                            alreadyExists.Parent = current;
-                        }
-                    }
-                    else
-                    {
-                        if (current.GCost + 10 < alreadyExists.GCost)
-                        {
-                            alreadyExists.GCost = current.GCost + 10;
-                            alreadyExists.Parent = current;
-                        }
+                        alreadyExistsInOpen.GCost = newGCost;
+                        alreadyExistsInOpen.Parent = current;
                     }
                 }
                 else
                 {
-                    if (current.Position.x != position.x && current.Position.y != position.y)
-                    {
-                        open.Add(new AStarNode(position, current.GCost + 14, current));
-                    }
-                    else
-                    {
-                        open.Add(new AStarNode(position, current.GCost + 10, current));
-                    }
+                    open.Add(new AStarNode(position, newGCost, current));
                 }
             }
-            AStarNode next = LowestFCost(open, target);
-            if (next.Position == target)
-            {
-                return next;
-            }
-
-            open.Remove(next);
-            closed.Add(next);
-            current = next;
-        } while (open.Count > 0);
-
-        return LowestHCost(closed, target);
+        }
+        
+        return LowestHCost(closed,target);
     }
+
     
     public int Distance(Vector2 start, Vector2 goal)
     {

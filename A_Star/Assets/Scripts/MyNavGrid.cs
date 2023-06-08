@@ -86,8 +86,8 @@ public class MyNavGrid : MonoBehaviour
 
     public Vector3 GridPositionToWorldPosition(Vector2Int gridPosition)
     {
-        return new Vector3(gridPosition.x * transform.localScale.x / dimensions.x, transform.position.y,
-            gridPosition.y * transform.localScale.z / dimensions.y);
+        return new Vector3((gridPosition.x+0.5f) * transform.localScale.x / dimensions.x, transform.position.y,
+            (gridPosition.y + 0.5f) * transform.localScale.z / dimensions.y);
     }
 
     public AStarNode FindPath(Vector2Int from, Vector2Int target)
